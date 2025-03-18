@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_auth"
+    app:startDestination="@id/guestProfile_item">
+
+    <fragment
+        android:id="@+id/search_item"
+        android:name="com.example.kursach_handbook.ui.login.Search"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/guestHistory_item"
+        android:name="com.example.kursach_handbook.ui.authorization.GuestHistory"
+        android:label="fragment_unauthorized_history"
+        tools:layout="@layout/fragment_guest_history" />
+
+    <fragment
+        android:id="@+id/guestProfile_item"
+        android:name="com.example.kursach_handbook.ui.authorization.GuestProfile"
+        android:label="fragment_guest_profile"
+        tools:layout="@layout/fragment_guest_profile" >
+        <action
+            android:id="@+id/action_guestProfile_item_to_registration"
+            app:destination="@id/registration" />
+        <action
+            android:id="@+id/action_guestProfile_item_to_forgotPassword"
+            app:destination="@id/forgotPassword" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registration"
+        android:name="com.example.kursach_handbook.ui.authorization.Registration"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_registration_to_guestProfile"
+            app:destination="@id/guestProfile_item" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/forgotPassword"
+        android:name="com.example.kursach_handbook.ui.authorization.ForgotPassword"
+        android:label="fragment_forgot_password"
+        tools:layout="@layout/fragment_forgot_password" >
+        <action
+            android:id="@+id/action_forgotPassword_to_guestProfile_item"
+            app:destination="@id/guestProfile_item" />
+    </fragment>
+
+</navigation>
