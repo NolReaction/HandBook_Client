@@ -1,5 +1,6 @@
 package com.example.kursach_handbook.ui.authorization
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.kursach_handbook.R
 import com.example.kursach_handbook.databinding.FragmentGuestProfileBinding
 import com.example.kursach_handbook.databinding.FragmentRegistrationBinding
+import com.example.kursach_handbook.ui.login.MainActivity
 
 class Registration : Fragment() {
     private var _binding: FragmentRegistrationBinding? = null
@@ -29,7 +31,7 @@ class Registration : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Подписка на события (например, для регистрации)
+        // Подписка на события
         authViewModel.authEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is AuthEvent.ShowError -> {
@@ -37,7 +39,8 @@ class Registration : Fragment() {
                 }
                 is AuthEvent.RegisterSuccess -> {
                     Toast.makeText(requireContext(), "Registration successful", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_registration_to_guestProfile)
+                    startActivity(Intent(requireContext(), MainActivity::class.java))
+                    requireActivity().finish()
                 }
                 else -> {}
             }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.kursach_handbook.R
 import com.example.kursach_handbook.data.token.TokenManager
@@ -27,9 +28,15 @@ class Profile : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Проверяем, подтверждена ли почта
+        val isVerified = TokenManager.getIsVerified(requireContext())
+        if (!isVerified) {
+            Toast.makeText(requireContext(), "Confirm your Email", Toast.LENGTH_LONG).show()
+        }
+
         binding.logoutBtn.setOnClickListener {
             // Удаляем токен
-            TokenManager().deleteToken(requireContext())
+            TokenManager.deleteAuthData(requireContext())
             // Перенаправляем пользователя на экран авторизации (или стартовую активность)
             val intent = Intent(requireContext(), AuthActivity::class.java)
             startActivity(intent)

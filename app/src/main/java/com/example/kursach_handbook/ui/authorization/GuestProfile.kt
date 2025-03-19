@@ -66,7 +66,7 @@ class GuestProfile : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 authViewModel.login(email, password)
             } else {
-                Toast.makeText(requireContext(), "Incorrect Input", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Incorrect Input", Toast.LENGTH_SHORT).show()
             }
         }
     }

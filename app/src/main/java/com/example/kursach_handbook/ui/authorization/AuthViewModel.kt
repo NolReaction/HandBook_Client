@@ -47,7 +47,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     _loginResult.value = loginResponse
                     _authEvent.value = AuthEvent.LoginSuccess
                     // Сохраняем токен
-                    TokenManager().saveToken(getApplication(), loginResponse.token)
+                    TokenManager.saveAuthData(getApplication(),  loginResponse.token, loginResponse.is_verified)
                 } else {
                     _loginResult.value = null
                     _authEvent.value = AuthEvent.ShowError("Incorrect email or password")
@@ -70,7 +70,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     if (registerResponse != null) {
                         _registerResult.value = registerResponse
                         _authEvent.value = AuthEvent.RegisterSuccess
-                        TokenManager().saveToken(getApplication(), registerResponse.token)
+                        TokenManager.saveAuthData(getApplication(), registerResponse.token, registerResponse.is_verified)
                     } else {
                         _registerResult.value = null
                         _authEvent.value = AuthEvent.ShowError("Registration failed")
@@ -81,7 +81,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                         // Если код ошибки 409, значит пользователь уже существует
                         _authEvent.value = AuthEvent.ShowError("User already exists")
                     } else {
-                        _authEvent.value = AuthEvent.ShowError("Registration failed")
+                        _authEvent.value = AuthEvent.ShowError("?Registration failed?")
                     }
                 }
             } catch (e: Exception) {
@@ -91,5 +91,4 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
 }
