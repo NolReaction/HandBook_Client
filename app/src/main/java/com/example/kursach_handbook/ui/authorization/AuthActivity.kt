@@ -35,6 +35,7 @@ class AuthActivity : AppCompatActivity() {
                 view.paddingBottom
             )
 
+
             // Возвращаем объект insets, чтобы не «съесть» их для других вью
             windowInsets
         }

@@ -2,6 +2,7 @@ package com.example.kursach_handbook.ui.authorization
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,7 @@ class GuestProfile : Fragment() {
                     // Завершаем текущую (неавторизованную) активность
                     requireActivity().finish()
                 }
+                else -> {}
             }
         }
 
@@ -58,9 +60,9 @@ class GuestProfile : Fragment() {
         }
 
         binding.loginButton.setOnClickListener {
-            val email = binding.usernameEditText.text.toString().trim()
+            val email = binding.emailEditText.text.toString().trim()
             val password = binding.passwordEditText.text.toString().trim()
-
+            // Используем login из authViewModel
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 authViewModel.login(email, password)
             } else {
@@ -69,9 +71,8 @@ class GuestProfile : Fragment() {
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null  // Предотвращаем утечки памяти
+        _binding = null
     }
 }

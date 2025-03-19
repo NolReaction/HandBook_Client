@@ -20,7 +20,7 @@ class LauncherActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         } else {
-            // Если токен отсутствует, запускаем активность для авторизации (например, LoginActivity)
+            // Если токен отсутствует, запускаем активность для авторизации (AuthActivity)
             startActivity(Intent(this, AuthActivity::class.java))
             finish()
         }

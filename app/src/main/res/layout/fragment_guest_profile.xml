@@ -42,7 +42,7 @@
         android:fontFamily="@font/teko_font"
         android:text="You don't have an account ?"
         android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@+id/usernameInputLayout"
+        app:layout_constraintBottom_toTopOf="@+id/emailInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.165"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +52,7 @@
         android:background="?attr/selectableItemBackground"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/usernameInputLayout"
+        android:id="@+id/emailInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.8"
@@ -64,7 +64,7 @@
         app:layout_constraintTop_toBottomOf="@id/login_textView" >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/usernameEditText"
+            android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -81,7 +81,7 @@
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usernameInputLayout" >
+        app:layout_constraintTop_toBottomOf="@id/emailInputLayout" >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordEditText"

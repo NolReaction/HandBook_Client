@@ -1,6 +1,6 @@
 package com.example.kursach_handbook.data.model
 
-data class LoginResponse(
+data class RegisterResponse(
     val token: String,
     val userId: Int,
     val userEmail: String
