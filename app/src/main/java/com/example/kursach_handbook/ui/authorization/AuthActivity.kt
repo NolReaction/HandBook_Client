@@ -1,6 +1,7 @@
 package com.example.kursach_handbook.ui.authorization
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -12,6 +13,14 @@ import com.example.kursach_handbook.databinding.ActivityAuthBinding
 
 class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
+
+    fun hideBottomNav() {
+        binding.barNavAuth.visibility = View.GONE
+    }
+
+    fun showBottomNav() {
+        binding.barNavAuth.visibility = View.VISIBLE
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

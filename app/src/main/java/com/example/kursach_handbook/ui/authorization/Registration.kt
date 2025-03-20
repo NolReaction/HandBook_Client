@@ -21,6 +21,16 @@ class Registration : Fragment() {
     // Инициализируем ViewModel
     private val authViewModel: AuthViewModel by viewModels()
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? AuthActivity)?.hideBottomNav()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as? AuthActivity)?.showBottomNav()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
