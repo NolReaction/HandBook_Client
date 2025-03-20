@@ -58,10 +58,18 @@ class ForgotPassword : Fragment() {
             val email = binding.emailEditText.text.toString().trim()
             if (email.isEmpty()) {
                 Toast.makeText(requireContext(), "Email is required", Toast.LENGTH_LONG).show()
-            } else {
-                authViewModel.recover(email)
+                return@setOnClickListener
             }
+            // Если email не соответствует формату, просто показываем сообщение и выходим (без отправки на сервер)
+            if (!isValidEmail(email)) {
+                Toast.makeText(requireContext(), "Reset link sent. Check your email", Toast.LENGTH_LONG).show()
+                findNavController().popBackStack()
+                return@setOnClickListener
+            }
+            // Если формат email корректный, отправляем запрос на сервер
+            authViewModel.recover(email)
         }
+
 
         binding.backButton.setOnClickListener {
             findNavController().navigate(R.id.action_forgotPassword_to_guestProfile_item)
@@ -71,5 +79,10 @@ class ForgotPassword : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
+        return email.matches(emailRegex)
     }
 }
