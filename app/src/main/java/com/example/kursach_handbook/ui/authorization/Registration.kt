@@ -10,14 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.kursach_handbook.R
-import com.example.kursach_handbook.databinding.FragmentGuestProfileBinding
 import com.example.kursach_handbook.databinding.FragmentRegistrationBinding
 import com.example.kursach_handbook.ui.login.MainActivity
 
 class Registration : Fragment() {
+
     private var _binding: FragmentRegistrationBinding? = null
     private val binding get() = _binding!!
 
+    // Инициализируем ViewModel
     private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreateView(
@@ -31,7 +32,7 @@ class Registration : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Подписка на события
+        // Подписка на события авторизации
         authViewModel.authEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is AuthEvent.ShowError -> {
@@ -51,27 +52,52 @@ class Registration : Fragment() {
             val password = binding.passwordEditText.text.toString().trim()
             val repeatPassword = binding.repeatPasswordEditText.text.toString().trim()
 
-            // Проверка повторного ввода пароля
-            if (repeatPassword != password) {
-                Toast.makeText(requireContext(), "Incorrect repeat password", Toast.LENGTH_LONG).show()
-                return@setOnClickListener // Прерываем выполнение, если пароли не совпадают
+            // Проверка заполненности всех полей
+            if (email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
+                Toast.makeText(requireContext(), "All fields are required", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
             }
 
-            // Проверка заполненности email и password
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                authViewModel.register(email, password)
-            } else {
-                Toast.makeText(requireContext(), "Incorrect Input", Toast.LENGTH_LONG).show()
+            // Проверка формата email
+            if (!isValidEmail(email)) {
+                Toast.makeText(requireContext(), "Invalid email format", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
             }
+
+            // Проверка валидности пароля
+            if (!isValidPassword(password)) {
+                Toast.makeText(requireContext(), "Password must be at least 6 characters and contain both letters and digits", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            // Проверка совпадения паролей
+            if (password != repeatPassword) {
+                Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            // Если всё прошло проверку, вызываем регистрацию через ViewModel
+            authViewModel.register(email, password)
         }
 
-        binding.backButton.setOnClickListener{
+        binding.backButton.setOnClickListener {
             findNavController().navigate(R.id.action_registration_to_guestProfile)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _binding = null  // Предотвращаем утечки памяти
+    }
+
+    // Приватная функция для проверки корректности email
+    private fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
+        return email.matches(emailRegex)
+    }
+
+    // Приватная функция для проверки валидности пароля
+    private fun isValidPassword(password: String): Boolean {
+        return password.length >= 6 && password.any { it.isDigit() } && password.any { it.isLetter() }
     }
 }
