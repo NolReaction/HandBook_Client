@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.kursach_handbook.data.model.ForgotPasswordRequest
 import com.example.kursach_handbook.data.model.LoginRequest
 import com.example.kursach_handbook.data.model.LoginResponse
 import com.example.kursach_handbook.data.model.RegisterRequest
@@ -19,6 +20,7 @@ sealed class AuthEvent {
     data class ShowError(val message: String) : AuthEvent()
     object LoginSuccess : AuthEvent()
     object RegisterSuccess : AuthEvent()
+    object ForgotPasswordSuccess : AuthEvent()
 }
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -87,6 +89,22 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: Exception) {
                 e.printStackTrace()
                 _registerResult.value = null
+                _authEvent.value = AuthEvent.ShowError("Network error")
+            }
+        }
+    }
+
+    fun recover(email: String) {
+        viewModelScope.launch {
+            try {
+                val response = authApi.forgotPassword(ForgotPasswordRequest(email))
+                if (response.isSuccessful) {
+                    _authEvent.value = AuthEvent.ForgotPasswordSuccess
+                } else {
+                    _authEvent.value = AuthEvent.ShowError("Failed to send reset link")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
                 _authEvent.value = AuthEvent.ShowError("Network error")
             }
         }

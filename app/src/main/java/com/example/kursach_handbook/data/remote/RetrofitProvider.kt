@@ -23,7 +23,7 @@ object RetrofitProvider {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl(TEST_URL)
+            .baseUrl(HTTP_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

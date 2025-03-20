@@ -18,4 +18,7 @@ interface AuthApi {
     suspend fun getProfile(
         @Header("Authorization") authToken: String
     ): Response<UserDto>
+
+    @POST("forgot-password")
+    suspend fun forgotPassword(@Body request: ForgotPasswordRequest): Response<ForgotPasswordMessageResponse>
 }
