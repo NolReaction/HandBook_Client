@@ -2,6 +2,7 @@ package com.example.kursach_handbook.ui.authorization
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -88,6 +89,9 @@ class Registration : Fragment() {
 
             // Если всё прошло проверку, вызываем регистрацию через ViewModel
             authViewModel.register(email, password)
+
+            // Запускаем таймер, чтобы кнопка была неактивна 60 секунд
+            startCooldownTimer()
         }
 
         binding.backButton.setOnClickListener {
@@ -100,6 +104,8 @@ class Registration : Fragment() {
         _binding = null  // Предотвращаем утечки памяти
     }
 
+
+
     // Приватная функция для проверки корректности email
     private fun isValidEmail(email: String): Boolean {
         val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
@@ -110,4 +116,25 @@ class Registration : Fragment() {
     private fun isValidPassword(password: String): Boolean {
         return password.length >= 6 && password.any { it.isDigit() } && password.any { it.isLetter() }
     }
+
+    // Функция запуска таймера на 60 секунд (60000 миллисекунд)
+    private fun startCooldownTimer() {
+        // Отключаем кнопку
+        binding.registerButton.isEnabled = false
+
+        // Запускаем CountDownTimer с интервалом в 1 секунду
+        object : CountDownTimer(60000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                // Обновляем текст кнопки, показывая оставшееся время в секундах
+                binding.registerButton.text = "${millisUntilFinished / 1000}"
+            }
+
+            override fun onFinish() {
+                // По окончании таймера возвращаем текст кнопки и включаем её
+                binding.registerButton.text = "Register"
+                binding.registerButton.isEnabled = true
+            }
+        }.start()
+    }
+
 }

@@ -42,17 +42,25 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
-                // Выполняем запрос авторизации через authApi
                 val response = authApi.login(LoginRequest(email, password))
-                val loginResponse = response.body()
-                if (response.isSuccessful && loginResponse != null) {
-                    _loginResult.value = loginResponse
-                    _authEvent.value = AuthEvent.LoginSuccess
-                    // Сохраняем токен
-                    TokenManager.saveAuthData(getApplication(),  loginResponse.token, loginResponse.is_verified)
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    if (loginResponse != null) {
+                        _loginResult.value = loginResponse
+                        _authEvent.value = AuthEvent.LoginSuccess
+                        TokenManager.saveAuthData(getApplication(), loginResponse.token, loginResponse.is_verified)
+                    } else {
+                        _loginResult.value = null
+                        _authEvent.value = AuthEvent.ShowError("Unexpected error")
+                    }
                 } else {
-                    _loginResult.value = null
-                    _authEvent.value = AuthEvent.ShowError("Incorrect email or password")
+                    // Если получен код 429, попробуем извлечь сообщение из errorBody
+                    if (response.code() == 429) {
+                        val errorMsg = response.errorBody()?.string() ?: "Too many failed attempts. Please try again later."
+                        _authEvent.value = AuthEvent.ShowError(errorMsg)
+                    } else {
+                        _authEvent.value = AuthEvent.ShowError("Incorrect email or password")
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
