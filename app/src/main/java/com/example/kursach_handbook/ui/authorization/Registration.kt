@@ -19,6 +19,8 @@ class Registration : Fragment() {
     private var _binding: FragmentRegistrationBinding? = null
     private val binding get() = _binding!!
 
+    private var countDownTimer: CountDownTimer? = null
+
     // Инициализируем ViewModel
     private val authViewModel: AuthViewModel by viewModels()
 
@@ -101,6 +103,8 @@ class Registration : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // Отменяем таймер, если он запущен
+        countDownTimer?.cancel()
         _binding = null  // Предотвращаем утечки памяти
     }
 
@@ -122,19 +126,19 @@ class Registration : Fragment() {
         // Отключаем кнопку
         binding.registerButton.isEnabled = false
 
-        // Запускаем CountDownTimer с интервалом в 1 секунду
-        object : CountDownTimer(60000, 1000) {
+        // Создаем таймер и сохраняем его в переменную
+        countDownTimer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                // Обновляем текст кнопки, показывая оставшееся время в секундах
+                // Проверяем, что binding не равен null
                 binding.registerButton.text = "${millisUntilFinished / 1000}"
             }
 
             override fun onFinish() {
-                // По окончании таймера возвращаем текст кнопки и включаем её
                 binding.registerButton.text = "Register"
                 binding.registerButton.isEnabled = true
             }
-        }.start()
+        }
+        countDownTimer?.start()
     }
 
 }
