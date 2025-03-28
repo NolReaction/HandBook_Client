@@ -16,7 +16,11 @@
         android:id="@+id/guestHistory_item"
         android:name="com.example.kursach_handbook.ui.authorization.GuestHistory"
         android:label="fragment_unauthorized_history"
-        tools:layout="@layout/fragment_guest_history" />
+        tools:layout="@layout/fragment_guest_history" >
+        <action
+            android:id="@+id/action_guestHistory_item_to_guestProfile_item"
+            app:destination="@id/guestProfile_item" />
+    </fragment>
 
     <fragment
         android:id="@+id/guestProfile_item"
