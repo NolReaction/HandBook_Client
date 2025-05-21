@@ -1,3 +1,4 @@
+// ui/login/PlaceAdapter.kt
 package com.example.kursach_handbook.ui.login
 
 import android.view.LayoutInflater
@@ -5,18 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kursach_handbook.R
 import com.example.kursach_handbook.data.model.PlaceDto
 import java.util.*
 
 class PlaceAdapter(
-    private var items: List<PlaceDto>,
     private val onClick: (PlaceDto) -> Unit
-) : RecyclerView.Adapter<PlaceAdapter.PlaceVH>() {
+) : ListAdapter<PlaceDto, PlaceAdapter.PlaceVH>(PlaceDiffCallback) {
 
-    // текущий отображаемый список (для фильтрации)
-    private var filtered = items.toList()
+    // текущий полный список (для фильтрации)
+    private var originalList: List<PlaceDto> = emptyList()
 
     inner class PlaceVH(view: View) : RecyclerView.ViewHolder(view) {
         private val nameTv: TextView = view.findViewById(R.id.place_name)
@@ -35,33 +36,29 @@ class PlaceAdapter(
         return PlaceVH(view)
     }
 
-    override fun getItemCount(): Int = filtered.size
-
     override fun onBindViewHolder(holder: PlaceVH, position: Int) {
-        holder.bind(filtered[position])
+        holder.bind(getItem(position))
     }
 
-    /** Обновить весь список */
-    fun submitList(newList: List<PlaceDto>) {
-        items = newList
-        filtered = newList
-        notifyDataSetChanged()
+    /** Передаём полный список и сразу отображаем его */
+    fun submitFullList(list: List<PlaceDto>) {
+        originalList = list
+        submitList(list)  // ListAdapter сам вызовет diff и обновит RecyclerView
     }
 
-    /** Отфильтровать по названию */
+    /** Фильтруем оригинальный список и подаём в ListAdapter */
     fun filter(query: String?) {
         val q = query
             ?.lowercase(Locale("ru"))
             ?.trim()
             ?: ""
-        filtered = if (q.isEmpty()) {
-            items
+        val filtered = if (q.isEmpty()) {
+            originalList
         } else {
-            items.filter { place ->
-                // сравниваем в нижнем регистре, с учётом русской локали:
+            originalList.filter { place ->
                 place.name.lowercase(Locale("ru")).contains(q)
             }
         }
-        notifyDataSetChanged()
+        submitList(filtered)  // тоже вызовет DiffUtil и обновит только изменившиеся элементы
     }
 }

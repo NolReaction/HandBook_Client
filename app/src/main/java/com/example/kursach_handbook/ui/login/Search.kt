@@ -33,19 +33,18 @@ class Search : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1) создаём Retrofit API
+        // Создаём Retrofit API
         api = RetrofitProvider
             .createRetrofit(requireContext())
             .create(AuthApi::class.java)
 
-        // 2) настраиваем RecyclerView + адаптер
-        adapter = PlaceAdapter(emptyList()) { place ->
-            // TODO: открыть экран деталей, например через SafeArgs
+        adapter = PlaceAdapter { place ->
+            // TODO: детали
         }
         binding.placesRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.placesRecycler.adapter = adapter
 
-        // 3) слушаем поисковую строку
+        // Слушаем поисковую строку
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?) = false
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -60,7 +59,7 @@ class Search : Fragment() {
             clearFocus()           // снимаем фокус (если не хотим сразу показывать клавиатуру)
         }
 
-        // 4) грузим данные
+        // Грузим данные
         loadPlaces()
     }
 
@@ -70,7 +69,7 @@ class Search : Fragment() {
                 val resp = api.getAll()
                 if (resp.isSuccessful) {
                     val list: List<PlaceDto> = resp.body().orEmpty()
-                    adapter.submitList(list)
+                    adapter.submitFullList(list)
                 } else {
                     // TODO: показать ошибку, например Toast
                 }
