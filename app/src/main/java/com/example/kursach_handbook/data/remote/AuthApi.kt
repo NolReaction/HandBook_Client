@@ -21,4 +21,7 @@ interface AuthApi {
 
     @POST("forgot-password")
     suspend fun forgotPassword(@Body request: ForgotPasswordRequest): Response<ForgotPasswordMessageResponse>
+
+    @GET("places")
+    suspend fun getAll(): Response<List<PlaceDto>>
 }
