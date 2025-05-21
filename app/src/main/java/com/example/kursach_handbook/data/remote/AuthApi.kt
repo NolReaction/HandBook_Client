@@ -6,6 +6,7 @@ import retrofit2.http.POST
 import retrofit2.http.GET
 import retrofit2.Response
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 
 interface AuthApi {
     @POST("login")
@@ -17,6 +18,12 @@ interface AuthApi {
     @GET("profile")
     suspend fun getProfile(
         @Header("Authorization") authToken: String
+    ): Response<UserDto>
+
+    @PATCH("profile/username")
+    suspend fun updateUsername(
+        @Header("Authorization") token: String,
+        @Body req: UpdateUsernameRequest
     ): Response<UserDto>
 
     @POST("forgot-password")
