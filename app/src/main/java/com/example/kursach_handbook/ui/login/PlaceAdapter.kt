@@ -1,4 +1,3 @@
-// ui/login/PlaceAdapter.kt
 package com.example.kursach_handbook.ui.login
 
 import android.view.LayoutInflater

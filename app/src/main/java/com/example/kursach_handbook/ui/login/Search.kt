@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kursach_handbook.data.model.PlaceDto
+import com.example.kursach_handbook.data.model.PlaceIdRequest
 import com.example.kursach_handbook.data.remote.AuthApi
 import com.example.kursach_handbook.data.remote.RetrofitProvider
 import com.example.kursach_handbook.databinding.FragmentSearchBinding
@@ -39,8 +40,14 @@ class Search : Fragment() {
             .create(AuthApi::class.java)
 
         adapter = PlaceAdapter { place ->
-            // TODO: детали
+            // 1) сразу отправляем историю
+            lifecycleScope.launch {
+                api.recordHistory(PlaceIdRequest(place.id))
+            }
+            // 2) навигация в детали
+            // ...
         }
+
         binding.placesRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.placesRecycler.adapter = adapter
 

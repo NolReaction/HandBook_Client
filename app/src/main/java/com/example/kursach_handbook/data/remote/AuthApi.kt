@@ -24,4 +24,10 @@ interface AuthApi {
 
     @GET("places")
     suspend fun getAll(): Response<List<PlaceDto>>
+
+    @POST("history")
+    suspend fun recordHistory(@Body req: PlaceIdRequest): Response<Unit>
+
+    @GET("history")
+    suspend fun getHistory(): Response<List<HistoryEntryDto>>
 }

@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.login.History">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Заголовок -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="HISTORY" />
+        android:layout_height="wrap_content"
+        android:text="@string/browsing_history"
+        android:textSize="20sp"
+        android:padding="16dp"/>
 
-</FrameLayout>
+    <!-- Список просмотренных мест -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/history_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+</LinearLayout>
