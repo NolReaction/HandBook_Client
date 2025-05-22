@@ -151,6 +151,11 @@ class Profile : Fragment() {
         }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Изменить username")
+            .setMessage(
+                "• От 4 до 12 символов\n" +
+                        "• Только латинские буквы и цифры\n" +
+                        "• Без пробелов и спецсимволов"
+            )
             .setView(edit)
             .setPositiveButton("Сохранить") { dlg, _ ->
                 val newName = edit.text.toString().trim()
@@ -162,6 +167,7 @@ class Profile : Fragment() {
             .setNegativeButton("Отмена", null)
             .show()
     }
+
 
     private fun updateUsername(newName: String) {
         lifecycleScope.launch {
@@ -177,18 +183,25 @@ class Profile : Fragment() {
                         // сразу обновляем локальный кеш:
                         store.saveProfile(currentUsername, currentAvatarKey)
                         Toast.makeText(requireContext(),
-                            "Username обновлён", Toast.LENGTH_SHORT).show()
+                            "Username успешно обновлён", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(requireContext(),
-                        "Ошибка: ${resp.code()}", Toast.LENGTH_SHORT).show()
+                    // разбираем код ошибки
+                    val msg = when (resp.code()) {
+                        400 -> "Некорректный username"
+                        409 -> "Такой username уже занят"
+                        else -> "Сервер вернул ошибку: ${resp.code()}"
+                    }
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                 }
             } catch (e: IOException) {
+                // сеть недоступна
                 Toast.makeText(requireContext(),
-                    "Нет соединения", Toast.LENGTH_SHORT).show()
+                    "Проверьте подключение к интернету", Toast.LENGTH_LONG).show()
             }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

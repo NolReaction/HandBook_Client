@@ -73,31 +73,36 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun register(email: String, password: String) {
         viewModelScope.launch {
             try {
-                // Выполняем запрос регистрации через authApi
                 val response = authApi.register(RegisterRequest(email, password))
                 if (response.isSuccessful) {
-                    val registerResponse = response.body()
-                    if (registerResponse != null) {
-                        _registerResult.value = registerResponse
-                        _authEvent.value = AuthEvent.RegisterSuccess
-                        TokenManager.saveAuthData(getApplication(), registerResponse.token, registerResponse.is_verified)
-                    } else {
+                    response.body()?.let { resp ->
+                        _registerResult.value = resp
+                        _authEvent.value    = AuthEvent.RegisterSuccess
+                        TokenManager.saveAuthData(
+                            getApplication(),
+                            resp.token,
+                            resp.is_verified
+                        )
+                    } ?: run {
                         _registerResult.value = null
-                        _authEvent.value = AuthEvent.ShowError("Registration failed")
+                        _authEvent.value      = AuthEvent.ShowError("Неожиданный ответ сервера")
                     }
                 } else {
-                    _registerResult.value = null
-                    if (response.code() == 409) {
-                        // Если код ошибки 409, значит пользователь уже существует
-                        _authEvent.value = AuthEvent.ShowError("User already exists")
-                    } else {
-                        _authEvent.value = AuthEvent.ShowError("?Registration failed?")
+                    // Разбираем конкретный код и тело ответа
+                    val errorBody = response.errorBody()?.string().orEmpty()
+                    val userMessage = when (response.code()) {
+                        400 -> errorBody.takeIf { it.isNotBlank() }
+                            ?: "Неверный формат или почты не существует"
+                        409 -> "Пользователь с таким e-mail уже зарегистрирован"
+                        else -> "Ошибка регистрации: (${response.code()})"
                     }
+                    _registerResult.value = null
+                    _authEvent.value      = AuthEvent.ShowError(userMessage)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 _registerResult.value = null
-                _authEvent.value = AuthEvent.ShowError("Network error")
+                _authEvent.value      = AuthEvent.ShowError("Ошибка соединения")
             }
         }
     }

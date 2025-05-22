@@ -99,7 +99,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Registration"
+        android:text="@string/register"
         android:textSize="28sp"
         android:fontFamily="@font/teko_font"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
