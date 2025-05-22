@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.kursach_handbook.R
+import com.example.kursach_handbook.data.local.ProfileDataStore
 import com.example.kursach_handbook.data.model.UpdateUsernameRequest
 import com.example.kursach_handbook.data.remote.AuthApi
 import com.example.kursach_handbook.data.remote.RetrofitProvider
@@ -17,6 +18,8 @@ import com.example.kursach_handbook.data.token.TokenManager
 import com.example.kursach_handbook.databinding.FragmentProfileBinding
 import com.example.kursach_handbook.ui.authorization.AuthActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -25,20 +28,22 @@ class Profile : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var store: ProfileDataStore
     private lateinit var api: AuthApi
     private lateinit var bearerToken: String
     private var currentUsername: String = ""
+    private var currentAvatarKey: String = ""
 
     private val avatars = mapOf(
         "bee"      to R.drawable.bee,
-        "beer"      to R.drawable.beer,
-        "deer"      to R.drawable.deer,
+        "beer"     to R.drawable.beer,
+        "deer"     to R.drawable.deer,
         "fox"      to R.drawable.fox,
-        "monkey"      to R.drawable.monkey,
+        "monkey"   to R.drawable.monkey,
         "owl"      to R.drawable.owl,
-        "panda"      to R.drawable.panda,
-        "penguin"      to R.drawable.penguin,
-        "roe_deer"      to R.drawable.roe_deer,
+        "panda"    to R.drawable.panda,
+        "penguin"  to R.drawable.penguin,
+        "roe_deer" to R.drawable.roe_deer,
     )
 
     override fun onCreateView(
@@ -52,18 +57,37 @@ class Profile : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        api = RetrofitProvider
-            .createRetrofit(requireContext())
+        // Инициализируем DataStore и API/TokenManager
+        store = ProfileDataStore(requireContext())
+        api = RetrofitProvider.createRetrofit(requireContext())
             .create(AuthApi::class.java)
 
-        // достаём токен
         TokenManager.getToken(requireContext())?.let {
             bearerToken = "Bearer $it"
         } ?: run {
             Toast.makeText(requireContext(), "Token not found", Toast.LENGTH_LONG).show()
+            requireActivity().finish()
             return
         }
 
+        // Подписываемся на кешированные значения
+        store.usernameFlow
+            .onEach { name ->
+                if (name.isNotBlank()) {
+                    binding.usernameTextView.text = name
+                }
+            }
+            .launchIn(lifecycleScope)
+
+        store.avatarFlow
+            .onEach { key ->
+                avatars[key]?.let { resId ->
+                    binding.avatarImageView.setImageResource(resId)
+                }
+            }
+            .launchIn(lifecycleScope)
+
+        // Клики и другие UI-инициализации
         binding.usernameTextView.setOnClickListener { showChangeUsernameDialog() }
         binding.logoutBtn.setOnClickListener {
             TokenManager.deleteAuthData(requireContext())
@@ -71,39 +95,50 @@ class Profile : Fragment() {
             requireActivity().finish()
         }
 
+        // Теперь можно дергать сеть
         fetchProfile()
     }
 
     private fun fetchProfile() {
         lifecycleScope.launch {
             try {
-                val r = api.getProfile(bearerToken)
-                if (r.isSuccessful) {
-                    r.body()?.let { user ->
-                        // Аватар из БД
-                        val resId = avatars[user.avatar]
-                            ?: R.drawable.default_avatar  // запасной вариант, если вдруг ключа нет
-                        binding.avatarImageView.setImageResource(resId)
+                val response = api.getProfile(bearerToken)
+                if (response.isSuccessful) {
+                    response.body()?.let { user ->
 
-                        // username: либо то, что пришло, либо берём часть email
-                        currentUsername = user.username
-                            .takeIf { it?.isNotBlank() == true }
+                        // вычисляем display-name и avatarKey
+                        val displayName = user.username
+                            .takeIf { it.isNotBlank() }
                             ?: user.email.substringBefore("@")
-                        binding.usernameTextView.text = currentUsername
+                        val avatarKey = user.avatar  // строка, которую бэкенд отдаёт
+
+                        // показываем их в UI
+                        binding.usernameTextView.text = displayName
+                        avatars[avatarKey]?.let {
+                            binding.avatarImageView.setImageResource(it)
+                        }
+
+                        // сохраняем в локальный кеш
+                        store.saveProfile(displayName, avatarKey)
 
                         if (!user.is_verified) {
                             Toast.makeText(
                                 requireContext(),
-                                "Please confirm your email",
+                                "Пожалуйста подтвердите почту",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Error: ${r.code()}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),
+                        "Ошибка сервера: ${response.code()}",
+                        Toast.LENGTH_LONG).show()
                 }
             } catch (e: IOException) {
-                Toast.makeText(requireContext(), "Network error", Toast.LENGTH_LONG).show()
+                // если нет сети — просто уведомляем, но UI уже отрисован из кеша
+                Toast.makeText(requireContext(),
+                    "Нет соединения !",
+                    Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -112,37 +147,45 @@ class Profile : Fragment() {
         val edit = EditText(requireContext()).apply {
             setText(currentUsername)
             setSelection(text.length)
-            hint = "New username"
+            hint = "Новый username"
         }
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Change username")
+            .setTitle("Изменить username")
             .setView(edit)
-            .setPositiveButton("Save") { dlg, _ ->
+            .setPositiveButton("Сохранить") { dlg, _ ->
                 val newName = edit.text.toString().trim()
                 if (newName.isNotEmpty() && newName != currentUsername) {
                     updateUsername(newName)
                 }
                 dlg.dismiss()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton("Отмена", null)
             .show()
     }
 
     private fun updateUsername(newName: String) {
         lifecycleScope.launch {
             try {
-                val r = api.updateUsername(bearerToken, UpdateUsernameRequest(newName))
-                if (r.isSuccessful) {
-                    r.body()?.let {
-                        currentUsername = it.username ?: newName
+                val resp = api.updateUsername(
+                    bearerToken,
+                    UpdateUsernameRequest(newName)
+                )
+                if (resp.isSuccessful) {
+                    resp.body()?.let { dto ->
+                        currentUsername = dto.username
                         binding.usernameTextView.text = currentUsername
-                        Toast.makeText(requireContext(), "Username updated", Toast.LENGTH_SHORT).show()
+                        // сразу обновляем локальный кеш:
+                        store.saveProfile(currentUsername, currentAvatarKey)
+                        Toast.makeText(requireContext(),
+                            "Username обновлён", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Error: ${r.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        "Ошибка: ${resp.code()}", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: IOException) {
-                Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    "Нет соединения", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.kursach_handbook.ui.login
+package com.example.kursach_handbook.ui.login.adapters
 
 import android.view.LayoutInflater
 import android.view.View

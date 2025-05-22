@@ -1,4 +1,4 @@
-package com.example.kursach_handbook.ui.login
+package com.example.kursach_handbook.ui.login.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kursach_handbook.R
 import com.example.kursach_handbook.data.model.PlaceDto
+import com.example.kursach_handbook.ui.login.callbacks.PlaceDiffCallback
 import java.util.*
 
 class PlaceAdapter(

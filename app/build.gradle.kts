@@ -56,10 +56,13 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
 
-    // Коррутины (для асинхронной работы)
+    // Коррутины
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // (Не обязательно, но часто используют OkHttp для логирования)
+    // OkHttp для логирования
     implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
+    // DataStore
+    implementation ("androidx.datastore:datastore-preferences:1.1.7")
 }

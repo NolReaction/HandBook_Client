@@ -1,4 +1,4 @@
-package com.example.kursach_handbook.ui.login
+package com.example.kursach_handbook.ui.login.callbacks
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.kursach_handbook.data.model.PlaceDto

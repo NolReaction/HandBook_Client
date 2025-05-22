@@ -13,6 +13,7 @@ import com.example.kursach_handbook.data.model.PlaceIdRequest
 import com.example.kursach_handbook.data.remote.AuthApi
 import com.example.kursach_handbook.data.remote.RetrofitProvider
 import com.example.kursach_handbook.databinding.FragmentSearchBinding
+import com.example.kursach_handbook.ui.login.adapters.PlaceAdapter
 import kotlinx.coroutines.launch
 
 class Search : Fragment() {

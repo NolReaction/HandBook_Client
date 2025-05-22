@@ -11,6 +11,7 @@ import com.example.kursach_handbook.data.remote.AuthApi
 import com.example.kursach_handbook.data.remote.RetrofitProvider
 import com.example.kursach_handbook.databinding.FragmentHistoryBinding
 import com.example.kursach_handbook.data.model.HistoryEntryDto
+import com.example.kursach_handbook.ui.login.adapters.HistoryAdapter
 import kotlinx.coroutines.launch
 
 class History : Fragment() {
