@@ -1,41 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:pressedTranslationZ="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    card:cardCornerRadius="8dp"
-    card:cardElevation="4dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="@color/backgroundCard">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
+        <!-- Название места -->
         <TextView
             android:id="@+id/place_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="Название места"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Рейтинг -->
         <RatingBar
             android:id="@+id/place_rating"
-            style="?android:attr/ratingBarStyleSmall"
+            style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
             android:stepSize="0.5"
-            android:isIndicator="true"/>
+            android:isIndicator="true"
+            app:layout_constraintStart_toStartOf="@id/place_name"
+            app:layout_constraintTop_toBottomOf="@id/place_name"
+            android:layout_marginTop="8dp"
+            android:progressTint="@color/gold"
+            android:secondaryProgressTint="@color/gold"
+            android:progressTintMode="src_atop"/>
 
+        <!-- Дата просмотра -->
         <TextView
             android:id="@+id/history_date"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="22.05.2025 16:56"
             android:textSize="14sp"
-            android:textColor="#666"
-            android:paddingTop="4dp"/>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+            android:textColor="#666666"
+            app:layout_constraintStart_toStartOf="@id/place_rating"
+            app:layout_constraintTop_toBottomOf="@id/place_rating"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
