@@ -1,0 +1,45 @@
+<resources>
+
+    <!-- Typography -->
+    <style name="App.Text.Title" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/teko_font</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="App.Text.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/teko_font</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:letterSpacing">0.06</item>
+    </style>
+
+    <style name="App.Text.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/teko_font</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- 🔷 Форма с маленьким радиусом (НЕ «пилюля») -->
+    <style name="Shape.App.Rounded8">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <!-- Кнопка (M3), но с нашей формой/высотой/паддингами -->
+    <style name="App.Widget.Button" parent="Widget.Material3.Button">
+        <item name="android:textAppearance">@style/App.Text.Button</item>
+        <item name="shapeAppearance">@style/Shape.App.Rounded8</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="backgroundTint">@color/myBlue</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- Outlined поле ввода (M3) -->
+    <style name="App.Widget.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox"/>
+
+    <!-- EditText внутри поля -->
+    <style name="App.Widget.TextInputEditText" parent="Widget.Material3.TextInputEditText.OutlinedBox">
+        <item name="android:textAppearance">@style/App.Text.Body</item>
+    </style>
+
+</resources>

@@ -51,21 +51,21 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                         TokenManager.saveAuthData(getApplication(), loginResponse.token, loginResponse.is_verified)
                     } else {
                         _loginResult.value = null
-                        _authEvent.value = AuthEvent.ShowError("Unexpected error")
+                        _authEvent.value = AuthEvent.ShowError("Неожиданная ошибка")
                     }
                 } else {
                     // Если получен код 429, попробуем извлечь сообщение из errorBody
                     if (response.code() == 429) {
-                        val errorMsg = response.errorBody()?.string() ?: "Too many failed attempts. Please try again later."
+                        val errorMsg = response.errorBody()?.string() ?: "Слишком много неудачных попыток. Попробуйте ещё раз позже."
                         _authEvent.value = AuthEvent.ShowError(errorMsg)
                     } else {
-                        _authEvent.value = AuthEvent.ShowError("Incorrect email or password")
+                        _authEvent.value = AuthEvent.ShowError("Неверный адрес электронной почты или пароль")
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 _loginResult.value = null
-                _authEvent.value = AuthEvent.ShowError("Network error")
+                _authEvent.value = AuthEvent.ShowError("Ошибка сети")
             }
         }
     }
@@ -114,11 +114,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 if (response.isSuccessful) {
                     _authEvent.value = AuthEvent.ForgotPasswordSuccess
                 } else {
-                    _authEvent.value = AuthEvent.ShowError("Failed to send reset link")
+                    _authEvent.value = AuthEvent.ShowError("Не удалось отправить ссылку для сброса")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                _authEvent.value = AuthEvent.ShowError("Network error")
+                _authEvent.value = AuthEvent.ShowError("Ошибка сети")
             }
         }
     }

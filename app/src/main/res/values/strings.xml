@@ -1,6 +1,25 @@
 <resources>
-    <string name="app_name">Kursach_HandBook</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="browsing_history">История просмотров</string>
+    <string name="app_name" translatable="false">Kursach_HandBook</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="browsing_history">Browsing history</string>
     <string name="register">Register</string>
+    <string name="search">Search</string>
+    <string name="history">History</string>
+    <string name="profile">Profile</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="email">Email</string>
+    <string name="send_a_recovery_letter">Send a recovery letter</string>
+    <string name="ohh_no">Ohh no</string>
+    <string name="you_are_not_authorized">You are not authorized ! Only authorized user can keep history</string>
+    <string name="go_to_profile">Go to profile</string>
+    <string name="log_in">Log In</string>
+    <string name="you_don_t_have_an_account_question">You don\'t have an account ?</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="log_out">Log out</string>
+    <string name="registration">Registration</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="back">Back</string>
+    <string name="name_of_place" translatable="false">Name of place</string>
+    <string name="Day_month_year_time" translatable="false">22.05.2025 16:56</string>
 </resources>
