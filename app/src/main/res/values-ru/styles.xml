@@ -1,17 +1,2 @@
 <resources>
-    <style name="App.Text.Title" parent="TextAppearance.Material3.HeadlineMedium">
-        <item name="fontFamily">@font/arial_regular</item>
-        <item name="android:textSize">36sp</item>
-    </style>
-
-    <style name="App.Text.Button" parent="TextAppearance.Material3.LabelLarge">
-        <item name="fontFamily">@font/arial_regular</item>
-        <item name="android:textSize">28sp</item>
-        <item name="android:letterSpacing">0.06</item>
-    </style>
-
-    <style name="App.Text.Body" parent="TextAppearance.Material3.BodyMedium">
-        <item name="fontFamily">@font/arial_regular</item>
-        <item name="android:textSize">16sp</item>
-    </style>
 </resources>
