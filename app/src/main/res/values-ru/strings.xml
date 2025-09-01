@@ -7,7 +7,7 @@
     <string name="profile">Профиль</string>
     <string name="forgot_password">Забыл пароль</string>
     <string name="email">Почта</string>
-    <string name="send_a_recovery_letter">Отсправить письмо восстановления</string>
+    <string name="send_a_recovery_letter">Отправить письмо восстановления</string>
     <string name="ohh_no">О нет</string>
     <string name="you_are_not_authorized">Вы не авторизованы ! Только авторизованный пользователь может вести историю.</string>
     <string name="go_to_profile">Перейти в профиль</string>

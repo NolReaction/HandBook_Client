@@ -54,19 +54,19 @@ class Registration : Fragment() {
 
             // Валидация полей
             if (email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
-                Toast.makeText(requireContext(), "All fields are required", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Все поля обязательны для заполнения", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
             if (!isValidEmail(email)) {
-                Toast.makeText(requireContext(), "Invalid email format", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Неверный формат электронной почты", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
             if (!isValidPassword(password)) {
-                Toast.makeText(requireContext(), "Password must be at least 6 characters and contain both letters and digits", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Пароль должен быть длиной не менее 6 символов и содержать как буквы, так и цифры", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
             if (password != repeatPassword) {
-                Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Пароли не совпадают", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
@@ -88,7 +88,7 @@ class Registration : Fragment() {
                     Toast.makeText(requireContext(), event.message, Toast.LENGTH_LONG).show()
 
                 is AuthEvent.RegisterSuccess -> {
-                    Toast.makeText(requireContext(), "Registration successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Регистрация прошла успешно", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(requireContext(), MainActivity::class.java))
                     requireActivity().finish()
                 }
