@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.kursach_handbook.R
 import com.example.kursach_handbook.data.local.ProfileDataStore
 import com.example.kursach_handbook.data.model.UpdateUsernameRequest
@@ -18,6 +19,7 @@ import com.example.kursach_handbook.data.token.TokenManager
 import com.example.kursach_handbook.databinding.FragmentProfileBinding
 import com.example.kursach_handbook.ui.authorization.AuthActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -33,6 +35,7 @@ class Profile : Fragment() {
     private lateinit var bearerToken: String
     private var currentUsername: String = ""
     private var currentAvatarKey: String = ""
+    private var isDarkTheme: Boolean = false
 
     private val avatars = mapOf(
         "bee"      to R.drawable.bee,
@@ -87,12 +90,28 @@ class Profile : Fragment() {
             }
             .launchIn(lifecycleScope)
 
+        lifecycleScope.launch {
+            isDarkTheme = store.isDarkThemeFlow.first()
+        }
+
         // Клики и другие UI-инициализации
         binding.usernameTextView.setOnClickListener { showChangeUsernameDialog() }
         binding.logoutBtn.setOnClickListener {
             TokenManager.deleteAuthData(requireContext())
             startActivity(Intent(requireContext(), AuthActivity::class.java))
             requireActivity().finish()
+        }
+
+        binding.themeButton.setOnClickListener {
+            val newTheme = !isDarkTheme
+            lifecycleScope.launch {
+                store.saveTheme(newTheme)
+                isDarkTheme = newTheme
+                AppCompatDelegate.setDefaultNightMode(
+                    if (newTheme) AppCompatDelegate.MODE_NIGHT_YES
+                    else AppCompatDelegate.MODE_NIGHT_NO
+                )
+            }
         }
 
         // Теперь можно дергать сеть

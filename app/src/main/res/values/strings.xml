@@ -23,4 +23,5 @@
     <string name="name_of_place" translatable="false">Name of place</string>
     <string name="Day_month_year_time" translatable="false">22.05.2025 16:56</string>
     <string name="logoImage" translatable="false">LogoImage</string>
+    <string name="switch_theme" translatable="false">Switch theme</string>
 </resources>

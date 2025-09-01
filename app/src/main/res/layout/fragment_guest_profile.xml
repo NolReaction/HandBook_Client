@@ -13,12 +13,26 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="60dp"
+        android:contentDescription="@string/logoImage"
         android:src="@drawable/logo_handbook"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.17"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.3" />
+
+    <ImageButton
+        android:id="@+id/themeButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="centerCrop"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/moon_switcher"
+        app:tint="?attr/colorOnSurface"
+        android:contentDescription="@string/switch_theme"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/login_textView"
