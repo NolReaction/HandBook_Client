@@ -5,14 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Поисковая строка -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="Поиск…"
         app:iconifiedByDefault="false"
-        />
+        app:closeIcon="@drawable/outline_cancel_24" />
+
+    <!-- История поиска (покажем по таймеру 2с простоя) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/history_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp" />
 
     <!-- Список карточек -->
     <androidx.recyclerview.widget.RecyclerView
