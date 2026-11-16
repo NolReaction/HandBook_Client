@@ -1,42 +1,33 @@
-# HandBook — Android-клиент справочника мест
+# HandBook: Android-клиент
 
-Университетский учебный проект и первый опыт автора в разработке связки Android-клиента и собственного backend. Здесь собраны интерфейс справочника, аккаунт пользователя и работа с HTTP API.
+HandBook я делал для университетской работы. Это мой первый проект, в котором я связал Android-приложение с собственным сервером и базой данных. На нём я начал разбираться, как клиент отправляет запрос, что с ним делает backend и как результат возвращается на экран.
 
-Серверная часть: [HandBook_Backend](https://github.com/NolReaction/HandBook_Backend).
+Я сделал справочник мест с поиском, аккаунтом и историей выбранных мест. В приложении есть регистрация, вход, запрос восстановления пароля и изменение имени в профиле. Для гостевого режима я добавил отдельные экраны профиля и истории, а часть настроек профиля и темы сохраняется локально.
 
-**Статус:** историческая учебная работа. Исходный код сохранён как этап перехода от отдельных экранов к приложению с сервером и базой данных.
+Сервер я вынес в отдельный репозиторий: [HandBook_Backend](https://github.com/NolReaction/HandBook_Backend).
 
-## Возможности
+Этот проект я оставил как часть своей истории обучения. Здесь есть незаконченные места: например, переход из поиска к подробной карточке пока отмечен TODO.
 
-- Регистрация, вход и запрос восстановления пароля через сервер.
-- Профиль пользователя и изменение имени.
-- Получение списка мест, поиск по списку и сохранение последних поисковых запросов.
-- Отправка и получение истории выбранных мест.
-- Гостевые экраны профиля и истории.
-- Сохранение части настроек профиля и темы локально.
+## Код и технологии
 
-## Стек и структура
+Я использовал Kotlin, Android Views/XML, Fragments, ViewBinding, Material Components, ViewModel и Coroutines. Запросы к серверу отправляются через Retrofit с Gson и OkHttp, локальные настройки хранятся в Preferences DataStore.
 
-**Kotlin · Android Views/XML · Fragments · ViewBinding · Material Components · ViewModel · Coroutines · Retrofit/Gson · OkHttp · Preferences DataStore.**
+- [ui/authorization](app/src/main/java/com/example/kursach_handbook/ui/authorization): вход, регистрация и гостевые экраны.
+- [ui/login](app/src/main/java/com/example/kursach_handbook/ui/login): поиск, профиль и история.
+- [data/remote](app/src/main/java/com/example/kursach_handbook/data/remote): API и настройка Retrofit.
+- [data/repository](app/src/main/java/com/example/kursach_handbook/data/repository): работа с API.
+- [data/token](app/src/main/java/com/example/kursach_handbook/data/token): хранение токена и interceptor.
+- [ProfileDataStore.kt](app/src/main/java/com/example/kursach_handbook/data/local/ProfileDataStore.kt): локальные настройки профиля.
 
-| Часть | Где смотреть |
-| --- | --- |
-| Авторизация, регистрация и гостевые экраны | [ui/authorization](app/src/main/java/com/example/kursach_handbook/ui/authorization) |
-| Поиск, профиль и история | [ui/login](app/src/main/java/com/example/kursach_handbook/ui/login) |
-| Контракт API и создание Retrofit | [data/remote](app/src/main/java/com/example/kursach_handbook/data/remote) |
-| Репозиторий работы с API | [data/repository](app/src/main/java/com/example/kursach_handbook/data/repository) |
-| Хранение токена и HTTP interceptor | [data/token](app/src/main/java/com/example/kursach_handbook/data/token) |
-| Локальные настройки профиля | [ProfileDataStore.kt](app/src/main/java/com/example/kursach_handbook/data/local/ProfileDataStore.kt) |
+В проекте Kotlin 1.9.24, AGP 8.8 и SDK 35. Минимальная версия Android: 10 / API 29. Зависимости указаны в [build.gradle.kts](app/build.gradle.kts) и [libs.versions.toml](gradle/libs.versions.toml).
 
-Проект использует Kotlin 1.9.24, AGP 8.8 и Android SDK 35. Минимальная версия устройства — Android 10 / API 29. Точные зависимости: [build.gradle.kts](app/build.gradle.kts) и [libs.versions.toml](gradle/libs.versions.toml).
+## Как запустить
 
-## Локальный запуск
-
-1. Поднять [HandBook_Backend](https://github.com/NolReaction/HandBook_Backend#запуск) со своей базой данных и конфигурацией.
-2. Открыть этот проект в Android Studio, установить SDK 35 и выполнить Gradle Sync.
-3. В [RetrofitProvider.kt](app/src/main/java/com/example/kursach_handbook/data/remote/RetrofitProvider.kt) выбрать адрес своего сервера. Для стандартного Android Emulator и сервера на компьютере уже предусмотрен `TEST_URL` — `http://10.0.2.2:8080/`; заменить `.baseUrl(HTTP_URL)` на `.baseUrl(TEST_URL)`.
-4. Для физического телефона указать LAN-адрес компьютера с сервером; телефон и компьютер должны иметь сетевой доступ друг к другу.
-5. Запустить `app` на устройстве или эмуляторе.
+1. Подними [backend](https://github.com/NolReaction/HandBook_Backend#запуск) со своей базой данных.
+2. Открой этот проект в Android Studio, установи SDK 35 и выполни Gradle Sync.
+3. В [RetrofitProvider.kt](app/src/main/java/com/example/kursach_handbook/data/remote/RetrofitProvider.kt) укажи свой сервер. Для Android Emulator и backend на компьютере уже есть `TEST_URL` со значением `http://10.0.2.2:8080/`. Для этого варианта замени `.baseUrl(HTTP_URL)` на `.baseUrl(TEST_URL)`.
+4. Для физического телефона укажи LAN-адрес компьютера. Оба устройства должны иметь сетевой доступ друг к другу.
+5. Запусти `app` на телефоне или эмуляторе.
 
 Сборка APK из корня:
 
@@ -44,10 +35,6 @@
 ./gradlew :app:assembleDebug
 ```
 
-В Windows — `gradlew.bat`. APK появляется в `app/build/outputs/apk/debug/app-debug.apk`. Работоспособность старого удалённого адреса из исходного кода не предполагается: для воспроизведения проекта нужен свой backend.
+В Windows используй `gradlew.bat`. APK появится в `app/build/outputs/apk/debug/app-debug.apk`. Старый удалённый адрес в коде оставлен от учебного запуска, на его доступность рассчитывать не стоит.
 
-## Что учитывать
-
-Это учебная реализация: в клиенте разрешён HTTP и включено подробное логирование HTTP body. Для локального знакомства используйте тестовые аккаунты. Настройки транспорта, хранения токенов и логирования требуют отдельной доработки перед публичным использованием.
-
-В коде поиска переход к подробной карточке места оставлен как TODO. Стартовые тесты Android-шаблона не подтверждают полное покрытие сценариев. Ценность проекта — в первом сквозном опыте: экран → репозиторий → API → сервер → база данных.
+В этой версии разрешён HTTP и включено подробное логирование HTTP body, поэтому для знакомства с проектом нужны тестовые аккаунты. Перед публичным использованием нужно пересмотреть транспорт, хранение токена и логи. Тесты пока стартовые, из Android-шаблона.
